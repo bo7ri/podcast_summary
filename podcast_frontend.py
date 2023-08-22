@@ -38,35 +38,49 @@ def main():
         available_podcast_info = create_dict_from_json_files('.')
 
 def display_podcast_info(podcast_info):
-    # Display the podcast title
-    st.subheader("Episode Title")
-    st.write(podcast_info['podcast_details']['episode_title'])
-
+    st.markdown("---")  # Horizontal line for visual separation
+    
+    # Display the podcast title with a larger font size for emphasis
+    st.markdown(f"<h2 style='font-weight: bold;'>{podcast_info['podcast_details']['episode_title']}</h2>", unsafe_allow_html=True)
+    
     # Display the podcast summary and the cover image in a side-by-side layout
     col1, col2 = st.columns([7, 3])
+    
     with col1:
-        st.subheader("Podcast Episode Summary")
+        st.markdown("## 🎙️ Podcast Episode Summary")
         st.write(podcast_info['podcast_summary'])
     with col2:
-        st.image(podcast_info['podcast_details']['episode_image'], caption="Podcast Cover", width=300, use_column_width=True)
+        # Added a slight shadow to the image for a pop-out effect
+        st.markdown(f"<div style='box-shadow: 2px 2px 12px gray;'><img src='{podcast_info['podcast_details']['episode_image']}' alt='Podcast Cover' width='100%'></div>", unsafe_allow_html=True)
 
     # Display the podcast guest and their details in a side-by-side layout
+    st.markdown("---")  # Horizontal line for visual separation
+    
     col3, col4 = st.columns([3, 7])
     with col3:
-        st.subheader("Podcast Guest")
-        st.write(podcast_info['podcast_guest']['name'])
+        st.markdown("## 🎤 Podcast Guest")
+        # Exception handling for potential missing guest name
+        try:
+            st.write(podcast_info['podcast_guest']['name'])
+        except KeyError:
+            st.write("Guest Name Not Available")
     with col4:
-        st.subheader("Podcast Guest Details")
-        st.write(podcast_info["podcast_guest"]['summary'])
+        st.markdown("## 📝 Podcast Guest Details")
+        # Use a safe get with a default value to handle potential absence
+        st.write(podcast_info.get("podcast_guest", {}).get('summary', "Details Not Available"))
 
-    # Display the five key moments
-    st.subheader("Key Moments")
+    # Display the five key moments with custom bullet points
+    st.markdown("---")  # Horizontal line for visual separation
+    st.markdown("## ⏰ Key Moments")
+    
     key_moments = podcast_info['podcast_highlights']
     for moment in key_moments.split('\n'):
-        st.markdown(f"<p style='margin-bottom: 5px;'>{moment}</p>", unsafe_allow_html=True)
+        st.markdown(f"<li style='margin-bottom: 5px;'>{moment}</li>", unsafe_allow_html=True)
 
-    # Adding a download button
-    download_button = st.button("Download Podcast Summary")
+    # Adding a download button with some margin-top for visual separation
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+    download_button = st.button("📥 Download Podcast Summary")
+    
     if download_button:
         download_file(podcast_info['podcast_summary'])
 
