@@ -61,7 +61,7 @@ def display_podcast_info(podcast_info):
         st.markdown("## 🎤 Podcast Guest")
         # Exception handling for potential missing guest name
         try:
-            st.write(podcast_guest)
+            st.write(podcast_info['podcast_guest'])
         except KeyError:
             st.write("Guest Name Not Available")
     with col4:
